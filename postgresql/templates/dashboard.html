@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'indi.css' %}" type="text/css">
+
+    <title>Document</title>
+</head>
+<body>
+    <div class="header">
+        <p onclick="document.getElementById('credit').style.display=(document.getElementById('credit').style.display == 'none')?'block' :'none'">Credit Amount</p>
+        <p onclick="document.getElementById('dedit').style.display=(document.getElementById('dedit').style.display == 'none')?'block' :'none'">Debit Amount</p>
+        <p onclick="document.getElementById('transfer').style.display=(document.getElementById('transfer').style.display == 'none')?'block' :'none'">Transfer Amount</p>
+        <p onclick="document.getElementById('balance').style.display=(document.getElementById('balance').style.display == 'none')?'block' :'none'">Balance Inquiry</p>
+        <p onclick="document.getElementById('logs').style.display=(document.getElementById('logs').style.display == 'none')?'block' :'none'">Transaction Logs</p>
+        
+        <!-- <a href="/musicplayer/{{usr.id}}"><p onclick="document.getElementById('music').style.display=(document.getElementById('music').style.display == 'none')?'block' :'none'">Music</p></a> -->
+        <a href="logout"><p>Logout</p></a>
+        
+    </div>
+    
+    {% csrf_token %}
+    <div class='container'>
+        
+        <h1>Welcome Back {{user.username}}!!</h1>
+        {% if messages %}
+            {% for message in messages %}
+                <p{% if message.tags %} class="{{ message.tags }}"{% endif %} style="color:red">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+        <h3 id='balance' style="display:none;">Your available balance is {{user.balance}} </h3>
+        <form action='credit' method='post' id='credit' style="display:none;">
+            {% csrf_token %}
+            <input type='decimal' name='credit' placeholder='Enter the amount to credit'>
+            <input type='password' name='pincredit' placeholder='Enter your PIN'>
+            <input type='submit' value='Credit'>
+        </form>
+
+        <form action='debit' method='post' id='dedit' style="display:none;">
+            {% csrf_token %}
+            <input type='decimal' name='debit' placeholder='Enter the amount to debit'>
+            <input type='password' name='pindebit' placeholder='Enter your PIN'>
+            <input type='submit' value='Debit'>
+        </form>
+
+        <form action='transfer' method='post' id='transfer' style="display:none;">
+            {% csrf_token %}
+            {% for usr in all_users %}
+                <input type="radio" name="to" id="{{usr.0}}{{usr.1}}" value="{{usr.1}}">
+                <label for="{{usr.0}}{{usr.1}}">{{usr.0}}</label>
+            {% endfor %}
+            <input type='decimal' name='transfer' placeholder='Enter the amount to transfer'>
+            <input type='password' name='pintransfer' placeholder='Enter your PIN'>
+            <input type='submit' value='Transfer'>
+        </form>
+
+        <table id='logs' style='display:none;'>
+            <tr>
+                <th colspan=6>Account Statement</th>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <th>From</th>
+                <th>Type</th>
+                <th>To</th>
+                <th>Amount</th>
+                <th>Balance</th>
+                
+
+            </tr>
+            {% if trans %}
+            {% for tran in trans %}
+            <tr>
+                <td>{{tran.date}}</td>
+                <td>{{tran.fro}}</td>
+                <td>{{tran.type}}</td>
+                <td>{{tran.to}}</td>
+                <td>{{tran.amount}}</td>
+                <td>{{tran.balance}}</td>
+            </tr>
+            {% endfor %}
+            {% endif %}
+        </table>
+        
+    </div>
+</body>
+</html>

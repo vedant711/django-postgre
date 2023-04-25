@@ -1,0 +1,34 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'style.css' %}" type="text/css">
+
+    <title>Document</title>
+</head>
+<body>
+    
+
+    <form action="/create" method="post" class="form">
+    <h1>Create New User</h1>
+        {% csrf_token %}
+        {% if messages %}
+    {% comment %} <ul class="messages"> {% endcomment %}
+        {% for message in messages %}
+        <p{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</p>
+        {% endfor %}
+    {% comment %} </ul> {% endcomment %}
+    {% endif %}
+        <input type="text" name="name" id="" placeholder="Enter your name">
+        <input type="password" name="password" id="" placeholder="Enter Password">
+        <input type="text" name="balance" id="" placeholder="Enter Opening balance">
+        <input type="password" name="pin" id="" placeholder="Enter Your PIN">
+        
+        <input type="submit" value="Submit">
+        <a href="/">Login</a>
+    </form>
+</body>
+</html>
